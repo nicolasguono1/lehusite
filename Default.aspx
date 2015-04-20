@@ -13,6 +13,9 @@
         <br />
         <asp:LinkButton ID="linkBut" runat="server" PostBackUrl="~/AddBlog.aspx">上传图片</asp:LinkButton>
         <br />
+        <br />
+        <br />
+        <br />
         
     </div>
         <asp:DropDownList ID="ddl_type" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
