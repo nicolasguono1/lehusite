@@ -10,6 +10,10 @@
     <form id="form1" runat="server">
     <div>
         
+        <br />
+        <asp:LinkButton ID="linkBut" runat="server" PostBackUrl="~/AddBlog.aspx">上传图片</asp:LinkButton>
+        <br />
+        
     </div>
         <asp:DropDownList ID="ddl_type" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
             <asp:ListItem Selected="True" Value="picture">图片</asp:ListItem>
@@ -40,6 +44,13 @@
             <SortedDescendingHeaderStyle BackColor="#002876" />
         </asp:GridView>
         <asp:GridView ID="gridview_user" runat="server" BackColor="White" BorderColor="#3366CC" BorderStyle="None" BorderWidth="1px" CellPadding="4">
+            <Columns>
+                <asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="btn_deleteuser" runat="server" CausesValidation="False" CommandArgument='<%# Eval("userId") %>' OnClick="btn_deleteuser_Click" Text="删除用户"></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
             <FooterStyle BackColor="#99CCCC" ForeColor="#003399" />
             <HeaderStyle BackColor="#003399" Font-Bold="True" ForeColor="#CCCCFF" />
             <PagerStyle BackColor="#99CCCC" ForeColor="#003399" HorizontalAlign="Left" />

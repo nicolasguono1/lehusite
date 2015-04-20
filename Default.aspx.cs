@@ -54,10 +54,11 @@ public partial class _Default : System.Web.UI.Page
             datasource = new DataTable();
             datasource.Columns.Add("用户名");
             datasource.Columns.Add("被举报数");
+            datasource.Columns.Add("userId");
             
             foreach (var user in users)
             {
-                datasource.Rows.Add(new[] { user["nickname"], user["report_count"] });
+                datasource.Rows.Add(new[] { user["nickname"], user["report_count"], user.ObjectId });
             }
 
             this.gridview_user.DataSource = datasource;
@@ -85,6 +86,7 @@ public partial class _Default : System.Web.UI.Page
     {
         LinkButton button = (LinkButton)sender;
         this.DeletePicture(button.CommandArgument);
+        //this.gridview_picture.r
     }
 
     async private void DeletePicture(string objectId)
@@ -96,5 +98,20 @@ public partial class _Default : System.Web.UI.Page
                 blog.DeleteAsync();
             });
 
+    }
+
+    async private void DeleteUser(string objectId)
+    {
+        var dict = new Dictionary<string, object>();
+        dict["userId"] = objectId;
+
+        var callTask = AVCloud.CallFunctionAsync<string>("deleteUser", dict);
+        await callTask;
+    }
+
+    protected void btn_deleteuser_Click(object sender, EventArgs e)
+    {
+        LinkButton button = (LinkButton)sender;
+        this.DeleteUser(button.CommandArgument);
     }
 }
