@@ -33,7 +33,7 @@ public partial class _Default : System.Web.UI.Page
 
             foreach (var blog in blogs)
             {
-                datasource.Rows.Add(new[] { blog["username"], blog["report_count"], ((AVFile)blog["image"]).Url, blog.ObjectId });
+                datasource.Rows.Add(new[] { blog["username"], blog["report_count"], ((AVFile)blog["thumbnail"]).Url, blog.ObjectId });
             }
 
             this.gridview_picture.DataSource = datasource;
