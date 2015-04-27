@@ -14,6 +14,7 @@
         <asp:LinkButton ID="linkBut" runat="server" PostBackUrl="~/AddBlog.aspx">上传图片</asp:LinkButton>
         <br />
         <br />
+        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="创建用户" Width="69px" />
         <br />
         <br />
         

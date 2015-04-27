@@ -16,12 +16,18 @@ using AVOSCloud;
 
 public partial class AddBlog : System.Web.UI.Page
 {
+    private readonly string SESSIONKEY = "userlist";
+    private IEnumerable<AVUser> users = null;
     protected void Page_Load(object sender, EventArgs e)
     {
-        //AVClient.Initialize("u2usgtzl5t8w9t2qpf8bbc88rvg85g5tgjtja3jpq0gfoilc", "dspdy8ip356aahviafq216hszwb0gp908vov9b4cck7nrywu");
         if (!this.Page.IsPostBack)
         {
+            AVClient.Initialize("u2usgtzl5t8w9t2qpf8bbc88rvg85g5tgjtja3jpq0gfoilc", "dspdy8ip356aahviafq216hszwb0gp908vov9b4cck7nrywu");
             this.InitParentCategories();
+            if (this.Page.Session[SESSIONKEY] == null)
+            {
+                this.InitUsers();
+            }
         }
     }
 
@@ -46,6 +52,32 @@ public partial class AddBlog : System.Web.UI.Page
                 this.parent_category.DataValueField = "objectId";
                 this.parent_category.DataBind();
              });
+
+        await task;
+    }
+
+    async private void InitUsers()
+    {
+        var task = AVUser.Query.WhereStartsWith("email", "user").FindAsync().ContinueWith(r =>
+        {
+            users = r.Result;
+
+            var datasource = new DataTable();
+            datasource.Columns.Add("username");
+            datasource.Columns.Add("objectId");
+
+            foreach (var u in users)
+            {
+                datasource.Rows.Add(new[] { u["nickname"], u.ObjectId });
+            }
+
+            this.choosen_users.DataSource = datasource;
+            this.choosen_users.DataTextField = "username";
+            this.choosen_users.DataValueField = "objectId";
+            this.choosen_users.DataBind();
+
+            this.Page.Session[SESSIONKEY] = users;
+        });
 
         await task;
     }
@@ -131,11 +163,18 @@ public partial class AddBlog : System.Web.UI.Page
     async private void UploadPictures()
     {
         List<AVUser> selectedUserList = new List<AVUser>();
+
+        if (this.Page.Session[SESSIONKEY] == null)
+        {
+            this.InitUsers();
+        }
+
+        var users = (IEnumerable<AVUser>)this.Page.Session[SESSIONKEY];
         foreach (ListItem item in this.choosen_users.Items)
         {
             if (item.Selected)
             {
-                AVUser user = await AVUser.Query.GetAsync(item.Value);
+                AVUser user = users.First(u => u.ObjectId == item.Value);
                 selectedUserList.Add(user);
             }
         }

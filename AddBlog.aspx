@@ -13,7 +13,7 @@
         <asp:DropDownList ID="child_category" runat="server" Height="27px" Width="161px"></asp:DropDownList>
         <br />
         <br />
-        <asp:CheckBoxList ID="choosen_users" runat="server">
+        <asp:CheckBoxList ID="choosen_users" runat="server" RepeatColumns="3">
             <asp:ListItem Value="54c8a200e4b0a0e2523d41f3">张崇园</asp:ListItem>
             <asp:ListItem Value="54c8b2f8e4b029264cb66142">Mr. Big</asp:ListItem>
             <asp:ListItem Value="54c9c8d4e4b0c6c6afb5f323">韩科技</asp:ListItem>

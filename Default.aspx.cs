@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -113,5 +114,41 @@ public partial class _Default : System.Web.UI.Page
     {
         LinkButton button = (LinkButton)sender;
         this.DeleteUser(button.CommandArgument);
+    }
+
+    private string jsonString = "[\"accepted\":true, \"isread\":true, \"userfrom\": [ \"__type\": \"Pointer\", \"className\": \"_User\", \"objectId\": \"{0}\"], \"userto\": [ \"__type\": \"Pointer\", \"className\": \"_User\", \"objectId\": \"{1}\" ]]";
+    private List<string> OurUserList = new List<string> { "54d6f366e4b029bade939875", "551e5404e4b0cd5b6244f29b", "54c8b2f8e4b029264cb66142", "54edb001e4b0b005716d7f7b", "54c9c8d4e4b0c6c6afb5f323" };
+
+    async private void CreateUser()
+    {
+        string uri = "https://api.leancloud.cn/1.1/classes/Friend";
+        string requestString = "";
+
+        for (int i = 0; i < 60; i++)
+        {
+            var user = new AVUser();
+            user.Username = string.Format("TestUser{0}", i);
+            user.Password = "123456";
+            user.Email = string.Format("user{0}@126.com", i);
+            await user.SignUpAsync();
+
+            foreach (var u in OurUserList)
+            {
+                WebClient client = new WebClient();
+                client.Headers.Add("Content-Type", "application/json");
+                client.Headers.Add("X-AVOSCloud-Application-Id", "u2usgtzl5t8w9t2qpf8bbc88rvg85g5tgjtja3jpq0gfoilc");
+                client.Headers.Add("X-AVOSCloud-Application-Key", "dspdy8ip356aahviafq216hszwb0gp908vov9b4cck7nrywu");
+
+                requestString = string.Format(jsonString, u, user.ObjectId);
+                requestString = requestString.Replace('[', '{').Replace(']', '}');
+                client.UploadString(uri, requestString);               
+            }
+        }
+    }
+
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        CreateUser();
     }
 }
