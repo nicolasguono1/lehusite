@@ -183,6 +183,7 @@ public partial class AddBlog : System.Web.UI.Page
         int userCount = selectedUserList.Count;
 
         AVObject selectedCategory = await AVObject.GetQuery("Category").GetAsync(this.child_category.SelectedValue);
+        int hack_pop = this.pop_check.Checked ? 1 : 0;
 
         var uploadedFiles = this.file_upload.PostedFiles;
         foreach (var file in uploadedFiles)
@@ -196,16 +197,16 @@ public partial class AddBlog : System.Web.UI.Page
             AVFile imageThumbnail = new AVFile(string.Format("thumbnail_{0}", file.FileName), this.GetBytesFromImage(thumbnailImage));
             await imageThumbnail.SaveAsync();
 
-            this.SaveBlog(selectedUserList[random.Next(userCount)], selectedCategory.ObjectId, imageThumbnail.ObjectId, imageFull.ObjectId);
+            this.SaveBlog(selectedUserList[random.Next(userCount)], selectedCategory.ObjectId, imageThumbnail.ObjectId, imageFull.ObjectId, hack_pop);
         }
     }
 
-    private string jsonString = "[\"username\":\"{0}\", \"category\": [ \"__type\": \"Pointer\", \"className\": \"Category\", \"objectId\": \"{1}\"], \"user\": [ \"__type\": \"Pointer\", \"className\": \"_User\", \"objectId\": \"{2}\" ], \"thumbnail\": [ \"__type\": \"File\", \"id\": \"{3}\"], \"image\": [ \"__type\": \"File\", \"id\": \"{4}\" ]]";
+    private string jsonString = "[\"username\":\"{0}\", \"category\": [ \"__type\": \"Pointer\", \"className\": \"Category\", \"objectId\": \"{1}\"], \"user\": [ \"__type\": \"Pointer\", \"className\": \"_User\", \"objectId\": \"{2}\" ], \"thumbnail\": [ \"__type\": \"File\", \"id\": \"{3}\"], \"image\": [ \"__type\": \"File\", \"id\": \"{4}\" ], \"hack_pop\": {5} ]";
 
-    private void SaveBlog(AVObject user, string categoryId, string thumbnailId, string imageId)
+    private void SaveBlog(AVObject user, string categoryId, string thumbnailId, string imageId, int hack_pop)
     {
         string uri = "https://api.leancloud.cn/1.1/classes/Blog";
-        string requestString = string.Format(jsonString, user["nickname"], categoryId, user.ObjectId, thumbnailId, imageId);
+        string requestString = string.Format(jsonString, user["nickname"], categoryId, user.ObjectId, thumbnailId, imageId, hack_pop);
         requestString = requestString.Replace('[', '{').Replace(']', '}');
 
         WebClient client = new WebClient();

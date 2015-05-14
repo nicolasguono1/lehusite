@@ -20,6 +20,9 @@
             <asp:ListItem Value="54d6f366e4b029bade939875">Nicolasguo</asp:ListItem>
         </asp:CheckBoxList>
         <br />
+        <asp:CheckBox ID="pop_check" runat="server" Text="是否设置为人气精选" />
+        <br />
+        <br />
         <asp:FileUpload ID="file_upload" runat="server" Width="262px" AllowMultiple="True" />
         <asp:Button ID="btn_upload" runat="server" OnClick="btn_upload_Click" Text="开始上传" Width="116px" />
         <br />
